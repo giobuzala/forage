@@ -6,7 +6,7 @@
 #' - If the `theme_list` argument includes a `Description` column, its text is incorporated as additional coding instructions.
 #' - Additional custom instructions can also be supplied through the `instructions` argument.
 #' 
-#' @param data A data frame containing the survey data.
+#' @param data A data frame containing the survey data, or a path to a `.csv`, `.xlsx`, or `.xls` file.
 #' @param x The open-ended variable to be coded.
 #' @param theme_list A data frame with at least two columns: `Code` and `Bin`.
 #' @param id_var The respondent ID variable.
@@ -30,7 +30,7 @@
 code_gpt <- function(data, x, theme_list, id_var = Vrid, n = NULL, batch_size = 100, model = "gpt-4o", instructions = NULL) {
   # Check required packages ----
   
-  required_pkgs <- c("rlang", "tibble", "dplyr", "purrr", "stringr", "httr2")
+  required_pkgs <- c("rlang", "tibble", "dplyr", "purrr", "stringr", "httr2", "readr", "readxl")
   missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, logical(1), quietly = TRUE)]
   if (length(missing_pkgs) > 0) {
     stop("These packages are required but not installed: ",
@@ -58,9 +58,32 @@ code_gpt <- function(data, x, theme_list, id_var = Vrid, n = NULL, batch_size = 
     )
   }
   
+  # Load data (data frame or file path)
+  read_input_data <- function(data) {
+    if (is.data.frame(data)) return(data)
+    if (is.character(data) && length(data) == 1) {
+      ext <- tolower(tools::file_ext(data))
+      if (ext == "csv") return(readr::read_csv(data, show_col_types = FALSE))
+      if (ext %in% c("xlsx", "xls")) return(readxl::read_excel(data))
+      stop("Unsupported file type: .", ext, ". Please upload a .csv, .xlsx, or .xls file.", call. = FALSE)
+    }
+    stop("`data` must be a data frame or a file path.", call. = FALSE)
+  }
+  
+  data <- read_input_data(data)
+  
   # Capture variable expressions
-  x_name <- rlang::as_name(rlang::enquo(x))
-  id_name <- rlang::as_name(rlang::enquo(id_var))
+  if (is.character(x) && length(x) == 1) {
+    x_name <- x
+  } else {
+    x_name <- rlang::as_name(rlang::enquo(x))
+  }
+  
+  if (is.character(id_var) && length(id_var) == 1) {
+    id_name <- id_var
+  } else {
+    id_name <- rlang::as_name(rlang::enquo(id_var))
+  }
   
   # Validate that x and id_var exist in dataset
   if (!(x_name %in% names(data))) stop("Variable ", x_name, " was not found in the dataset.", call. = FALSE)
