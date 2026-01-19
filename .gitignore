@@ -1,4 +1,5 @@
 .env
+
 # Ignore Excel files
 *.xlsx
 *.xls
