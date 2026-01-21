@@ -195,7 +195,7 @@ code_gpt <- function(data, x, theme_list, id_var = Vrid, n = NULL, batch_size = 
     !!id_name := ids,
     !!q_label := responses,
     `Code(s)` = coded_raw,
-    `Bin(s)` = coded_bins
+  # `Bin(s)` = coded_bins
   )
   
   # Clean up

@@ -663,14 +663,159 @@ server <- function(input, output, session) {
   })
   
   output$download <- downloadHandler(
-    filename = function() "Coded Responses.xlsx",
+    filename = function() {
+      "Coded Responses.xlsx"
+    },
     content = function(file) {
-      writexl::write_xlsx(
-        list(
-          "Coded Responses" = coded_data(),
-          "Theme List" = theme_used()
+      
+      # Workbook ----
+      wb <- openxlsx::createWorkbook()
+      
+      # Styles ----
+      header_style <- openxlsx::createStyle(
+        textDecoration = "bold",
+        wrapText = TRUE,
+        valign = "center"
+      )
+      
+      even_row_style <- openxlsx::createStyle(
+        fgFill = "#F2F2F2",
+        wrapText = TRUE,
+        border = "TopBottomLeftRight",
+        borderColour = "#E0E0E0"
+      )
+      
+      odd_row_style <- openxlsx::createStyle(
+        fgFill = "#FFFFFF",
+        wrapText = TRUE,
+        border = "TopBottomLeftRight",
+        borderColour = "#E0E0E0"
+      )
+      
+      # ---- Coded Responses sheet ----
+      coded <- coded_data() %>%
+        dplyr::mutate(
+          `Bin(s)` = NA_character_
+        )
+      
+      openxlsx::addWorksheet(wb, "Coded Responses")
+      openxlsx::writeData(
+        wb,
+        sheet = "Coded Responses",
+        x = coded,
+        withFilter = TRUE
+      )
+      
+      # Header style
+      openxlsx::addStyle(
+        wb,
+        "Coded Responses",
+        header_style,
+        rows = 1,
+        cols = 1:ncol(coded),
+        gridExpand = TRUE
+      )
+      
+      # Alternating rows
+      for (i in seq_len(nrow(coded))) {
+        style <- if (i %% 2 == 0) even_row_style else odd_row_style
+        openxlsx::addStyle(
+          wb,
+          "Coded Responses",
+          style,
+          rows = i + 1,
+          cols = 1:ncol(coded),
+          gridExpand = TRUE
+        )
+      }
+      
+      # Column widths (adjust if needed)
+      openxlsx::setColWidths(
+        wb,
+        "Coded Responses",
+        cols = 1:ncol(coded),
+        widths = "auto"
+      )
+      
+      # Freeze header
+      openxlsx::freezePane(
+        wb,
+        "Coded Responses",
+        firstRow = TRUE
+      )
+      
+      # ---- Bin(s) lookup formula ----
+      bin_col <- which(names(coded) == "Bin(s)")
+      code_col <- which(names(coded) == "Code(s)")
+      
+      openxlsx::writeData(
+        wb,
+        sheet = "Coded Responses",
+        x = paste0(
+          '=IF(', openxlsx::int2col(code_col), '2="", "", ',
+          'TEXTJOIN("; ", , MAP(TEXTSPLIT(',
+          openxlsx::int2col(code_col), '2, ","), LAMBDA(code,',
+          ' IF(TRIM(code)="", "", TRIM(IFERROR(',
+          ' XLOOKUP(TRIM(code)+0, ',
+          '\'Theme List\'!$A$2:$A$100, ',
+          '\'Theme List\'!$B$2:$B$100), ',
+          '"CODE " & TRIM(code) & " DOES NOT EXIST")))))))'
         ),
-        file
+        startCol = bin_col,
+        startRow = 2
+      )
+      
+      # Conditional formatting for invalid codes
+      openxlsx::conditionalFormatting(
+        wb,
+        sheet = "Coded Responses",
+        cols = bin_col,
+        rows = 2:(nrow(coded) + 1),
+        rule = "DOES NOT EXIST",
+        type = "contains",
+        style = openxlsx::createStyle(fontColour = "#FF0000")
+      )
+      
+      # Match Coding Workbook width for Bin(s)
+      openxlsx::setColWidths(
+        wb,
+        "Coded Responses",
+        cols = bin_col,
+        widths = 50
+      )
+      
+      # ---- Theme List sheet ----
+      themes <- theme_used()
+      
+      openxlsx::addWorksheet(wb, "Theme List")
+      openxlsx::writeData(
+        wb,
+        sheet = "Theme List",
+        x = themes,
+        withFilter = FALSE
+      )
+      
+      openxlsx::addStyle(
+        wb,
+        "Theme List",
+        header_style,
+        rows = 1,
+        cols = 1:ncol(themes),
+        gridExpand = TRUE
+      )
+      
+      openxlsx::setColWidths(
+        wb,
+        "Theme List",
+        cols = 1:ncol(themes),
+        widths = "auto"
+      )
+      
+      # Save ----
+      openxlsx::saveWorkbook(
+        wb,
+        file = file,
+        overwrite = TRUE
       )
     }
   )
