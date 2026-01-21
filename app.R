@@ -579,9 +579,82 @@ server <- function(input, output, session) {
   output$download_themes <- downloadHandler(
     filename = function() "Theme List.xlsx",
     content = function(file) {
-      writexl::write_xlsx(generated_themes(), file)
+      
+      req(generated_themes())
+      themes <- generated_themes()
+      
+      wb <- openxlsx::createWorkbook()
+      
+      # Styles
+      header_style <- openxlsx::createStyle(
+        textDecoration = "bold",
+        wrapText = TRUE,
+        valign = "center"
+      )
+      
+      even_row_style <- openxlsx::createStyle(
+        fgFill = "#F2F2F2",
+        wrapText = TRUE,
+        border = "TopBottomLeftRight",
+        borderColour = "#E0E0E0",
+        valign = "center"
+      )
+      
+      odd_row_style <- openxlsx::createStyle(
+        fgFill = "#FFFFFF",
+        wrapText = TRUE,
+        border = "TopBottomLeftRight",
+        borderColour = "#E0E0E0",
+        valign = "center"
+      )
+      
+      # Pad to 30 rows
+      max_rows <- 30
+      n_pad <- max(0, max_rows - nrow(themes))
+      
+      codes_sheet <- dplyr::bind_rows(
+        themes,
+        tibble::tibble(
+          Code = rep(NA_integer_, n_pad),
+          Bin = rep(NA_character_, n_pad),
+          Description = rep(NA_character_, n_pad)
+        )
+      )
+      
+      # Codes sheet
+      openxlsx::addWorksheet(wb, "Codes")
+      openxlsx::writeData(wb, "Codes", codes_sheet, withFilter = FALSE)
+      
+      # Header style
+      openxlsx::addStyle(
+        wb, "Codes",
+        header_style,
+        rows = 1,
+        cols = 1:ncol(codes_sheet),
+        gridExpand = TRUE
+      )
+      
+      # Zebra striping
+      for (i in seq_len(nrow(codes_sheet))) {
+        style <- if (i %% 2 == 0) even_row_style else odd_row_style
+        openxlsx::addStyle(
+          wb, "Codes",
+          style,
+          rows = i + 1,
+          cols = 1:ncol(codes_sheet),
+          gridExpand = TRUE,
+          stack = TRUE
+        )
+      }
+      
+      # Column widths
+      openxlsx::setColWidths(wb, "Codes", cols = 2, widths = 50)
+      openxlsx::setColWidths(wb, "Codes", cols = 3, widths = 80)
+      
+      openxlsx::saveWorkbook(wb, file, overwrite = TRUE)
     }
   )
+  
   
   # Show coded data download button only after coding succeeds
   output$download_coded_ui <- renderUI({
