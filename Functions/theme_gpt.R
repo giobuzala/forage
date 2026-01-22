@@ -176,7 +176,7 @@ theme_gpt <- function(data, x, n = NULL, sample = NULL, model = "gpt-4o-mini", i
   
   # Add codes
   df <- df %>%
-    dplyr::filter(Bin != "Bin") %>% # Drop accidental header-like row
+    dplyr::filter(!(Bin %in% c("Bin", "Description") | Description %in% c("Bin", "Description"))) %>% # Drop accidental header-like row
     dplyr::mutate(Code = dplyr::row_number()) %>%
     dplyr::select(Code, Bin, Description)
   
