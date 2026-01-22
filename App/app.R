@@ -386,7 +386,6 @@ server <- function(input, output, session) {
   # Helper function to update the status banner
   set_status <- function(msg) status_text(msg)
   
-  
   # Data input reactives ----
 
   # Reads the uploaded survey file
@@ -402,7 +401,6 @@ server <- function(input, output, session) {
     if (is.null(input$theme_file)) return(NULL)
     read_input_file(input$theme_file$datapath)
   })
-  
   
   # UI outputs ----
 
@@ -422,7 +420,6 @@ server <- function(input, output, session) {
   output$status_banner <- renderUI({
     div(class = "notice", tags$strong("Status: "), status_text())
   })
-  
   
   # Button enable/disable + global status logic ----
 
@@ -458,7 +455,6 @@ server <- function(input, output, session) {
       set_status("Ready to generate themes or code responses.")
     }
   })
-  
   
   # Step 2 — Theme generation ----
 
@@ -497,7 +493,6 @@ server <- function(input, output, session) {
     )
   })
   
-  
   # Step 3 — Coding responses ----
 
   observeEvent(input$run, {
@@ -534,8 +529,8 @@ server <- function(input, output, session) {
                   paste(
                     "<strong>Theme list format is invalid.</strong><br><br>",
                     "Your uploaded theme list must contain the following columns:<br><br>",
-                    "• <strong>Code</strong> – a <u>numeric</u> theme ID (e.g., 1, 2, 3)<br>",
-                    "• <strong>Bin</strong> – the short theme code (e.g., \"Trust\", \"Price\", \"Service\")<br>",
+                    "• <strong>Code</strong> – a unique <u>numeric</u> code for each theme (e.g., 1, 2, 3)<br>",
+                    "• <strong>Bin</strong> – short descriptive label for the theme (e.g., \"Trust\", \"Price\", \"Service\")<br>",
                     "• <strong>Description</strong> <em>(optional, but recommended)</em> – a brief explanation ",
                     "of what the theme represents<br><br>",
                     "<strong>Your file currently contains the following columns:</strong><br>",
@@ -604,7 +599,6 @@ server <- function(input, output, session) {
       req(generated_themes())
       themes <- generated_themes()
       
-      
       # Workbook ----
       
       wb <- openxlsx::createWorkbook()
@@ -629,7 +623,6 @@ server <- function(input, output, session) {
         )
       )
       
-      
       # Codes sheet ----
       
       openxlsx::addWorksheet(wb, "Codes")
@@ -648,7 +641,6 @@ server <- function(input, output, session) {
       # Column widths
       openxlsx::setColWidths(wb, "Codes", cols = 2, widths = 50)
       openxlsx::setColWidths(wb, "Codes", cols = 3, widths = 80)
-      
       
       # Save workbook ----
       
@@ -681,7 +673,6 @@ server <- function(input, output, session) {
       odd_row_style <- openxlsx::createStyle(fgFill = "#FFFFFF", wrapText = TRUE, border = "TopBottomLeftRight", borderColour = "#E0E0E0")
       
       vert_center_style <- openxlsx::createStyle(valign = "center")
-      
       
       # Coded Responses sheet ----
       
@@ -742,7 +733,6 @@ server <- function(input, output, session) {
       openxlsx::setColWidths(wb, "Coded Responses", cols = code_col, widths = 20)
       openxlsx::setColWidths(wb, "Coded Responses", cols = bin_col,  widths = 100)
       
-      
       # Theme List sheet ----
       
       themes <- theme_used() %>%
@@ -801,7 +791,6 @@ server <- function(input, output, session) {
       openxlsx::writeFormula(wb, "Theme List", perc_formula,  startCol = 5, startRow = 2)
       
       openxlsx::addStyle(wb, "Theme List", openxlsx::createStyle(numFmt = "0%"), rows = 2:(nrow(themes) + 1), cols = 5, gridExpand = TRUE, stack = TRUE)
-      
       
       # Save workbook ----
       

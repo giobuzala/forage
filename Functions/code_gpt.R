@@ -3,9 +3,6 @@
 #' @description
 #' This function submits open-ended survey responses to the OpenAI API and returns a dataset with the original responses, assigned codes, and bins from a provided code list.
 #' 
-#' - If the `theme_list` argument includes a `Description` column, its text is incorporated as additional coding instructions.
-#' - Additional custom instructions can also be supplied through the `instructions` argument.
-#' 
 #' @param data A data frame containing the survey data, or a path to a `.xlsx` or `.xls` file.
 #' @param x The open-ended variable to be coded.
 #' @param theme_list A data frame with at least two columns: `Code` and `Bin`.
@@ -15,16 +12,9 @@
 #' @param model Character string; the OpenAI model to use. Defaults to `gpt-4o`.
 #' @param instructions Optional string; additional instructions for coding.
 #'
-#' @details
-#' Requires an OpenAI API key, which can be generated at `https://platform.openai.com/`, to be set in your R session using `Sys.setenv(OPENAI_API_KEY="...")`.
-#'
 #' @return
 #' A table with respondent IDs, responses, codes, and bins.
 #'
-#' @examples
-#' # Code Q5
-#' Q5_coded <- code_gpt(data = survey_data, x = Q5, theme_list = theme_list, id_var = Vrid, model = "gpt-4o")
-#' 
 #' @export
 
 code_gpt <- function(data, x, theme_list, id_var = Vrid, n = NULL, batch_size = 100, model = "gpt-4o-mini", instructions = NULL) {
@@ -211,13 +201,6 @@ code_gpt <- function(data, x, theme_list, id_var = Vrid, n = NULL, batch_size = 
         paste(codes, collapse = ", ")
       })
     )
-  
-  # Attach metadata
-  attr(result, "data") <- data
-  attr(result, "x_name") <- x_name
-  attr(result, "id_name") <- id_name
-  attr(result, "theme_list") <- theme_list
-  attr(result, "q_label") <- q_label
   
   invisible(result)
 }

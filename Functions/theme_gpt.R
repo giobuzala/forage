@@ -2,18 +2,15 @@
 #'
 #' @description
 #' This function analyzes open-ended survey responses and automatically generates a set of thematic codes with descriptions.
-#' Additional custom instructions can be supplied through the `instructions` argument.
 #'
 #' @param data A data frame containing the survey data, or a path to a `.xlsx` or `.xls` file.
 #' @param x The open-ended variable to analyze.
-#' @param n Integer; number of themes to return. Defaults to `10`.
+#' @param n Integer; number of themes to return. If `NULL` (default), the model determines an appropriate number of themes based on the responses.
 #' @param sample Optional integer specifying the number of responses to sample for analysis. If `NULL`, all valid responses are used.
 #' @param model Character string; the OpenAI model to use. Defaults to `gpt-4o`.
 #' @param instructions Optional string; additional instructions for coding.
 #'
 #' @details
-#' Requires an OpenAI API key, which can be generated at `https://platform.openai.com/`, to be set in your R session using `Sys.setenv(OPENAI_API_KEY="...")`.
-#'
 #' The output is a tibble with three columns:
 #' - `Code`: A unique numeric code for each theme (standard codes 97–99 are added automatically).
 #' - `Bin`: Short label for the theme, written in sentence case.
@@ -24,16 +21,12 @@
 #' - `98` = `None`
 #' - `99` = `Don't know`
 #' 
-#' Use this function to create a `theme_list` for input into `code_gpt()`, or copy and paste it into an Excel coding workbook.
+#' Use this function to create a `theme_list` for input into `code_gpt()`.
 #'
 #' **Note:** It’s best to review and refine the generated codes before using them in `code_gpt()`.
 #'
 #' @return
 #' A table containing the generated thematic code list and their description. Standard codes (`Other`, `None`, `Don't know`) are included automatically.
-#'
-#' @examples
-#' # Generate a theme list for Q5
-#' theme_list <- theme_gpt(data = survey_data, x = Q5)
 #' 
 #' @export
 
@@ -194,12 +187,6 @@ theme_gpt <- function(data, x, n = NULL, sample = NULL, model = "gpt-4o-mini", i
   result <- dplyr::bind_rows(standard, df) %>%
     dplyr::mutate(Code = as.integer(Code)) %>%
     dplyr::relocate(Code, Bin, Description)
-  
-  # Attach metadata
-  attr(result, "x_name") <- x_name
-  attr(result, "q_label") <- q_label
-  attr(result, "n_themes") <- n
-  attr(result, "sample_n") <- sample_n
   
   invisible(result)
 }
