@@ -1,3 +1,4 @@
+# Ignore environment variables/API keys
 .env
 
 # Ignore Excel files
