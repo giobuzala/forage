@@ -220,7 +220,7 @@ ui <- fluidPage(
         padding: 10px 22px;
       }
 
-     /* Primary action buttons */
+      /* Primary action buttons */
       .btn-primary,
       .btn-primary:hover,
       .btn-primary:focus,
@@ -289,6 +289,37 @@ ui <- fluidPage(
         margin: 4px 0;
         padding-left: 22px;
       }
+      
+      /* =====================================================
+         INFORMATIONAL PANELS (Instructions & Disclaimer)
+         ===================================================== */
+
+      /* Base styling for non-interactive informational panels */
+      .panel-info {
+        background: #f9fafb;
+        border-color: #d1d5db;
+      }
+
+      /* Headings in info panels */
+      .panel-info h5 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      /* Text in info panels */
+      .panel-info p,
+      .panel-info li {
+        font-size: 0.95rem;
+        color: #4b5563;
+        line-height: 1.6;
+        margin-bottom: 8px;
+      }
+
+      /* Tighter top margin for lists */
+      .panel-info ol {
+        margin-top: 8px;
+      }
 
     "))
   ),
@@ -296,25 +327,29 @@ ui <- fluidPage(
   # Main content container ----
   
   div(
-    # Instructions
-    
     class = "container",
-    
     h2("forage"),
     p(class = "lead", "AI-assisted open-ended coding agent"),
     
+    # Instructions
+    
     div(
-      class = "panel",
+      class = "panel panel-info",
+      h5("How it works"),
       tags$ol(
         tags$li(strong("Upload your survey file:"), " Select the file containing your open-ended survey responses."),
-        tags$li(strong("Generate a theme list:"), " The app will analyze responses and generate themes with clear labels and descriptions.
-                                                   You can download the list for review or proceed to the next step using it as generated."),
-        tags$li(strong("Code responses and download results:"), " If you are not using the theme list generated in the previous step, upload your own theme list.
-                                                                 Each response will be assigned one or more themes, and you can download the coded file.")
+        tags$li(
+          strong("Generate a theme list:"),
+          " The app will analyze responses and generate themes with clear labels and descriptions.
+          You can download the list for review or proceed to the next step using it as generated."
+        ),
+        tags$li(
+          strong("Code responses and download results:"),
+          " If you are not using the theme list generated in the previous step, upload your own theme list.
+          Each response will be assigned one or more themes, and you can download the coded file."
+        )
       )
     ),
-    
-    uiOutput("status_banner"),
     
     # Step 1
     
@@ -349,18 +384,36 @@ ui <- fluidPage(
       p(
         class = "subtle",
         "Use the generated themes or upload an existing theme list.
-         As a best practice, review generated themes before coding."
+        As a best practice, review generated themes before coding."
       ),
-      p(
-        class = "subtle",
-        "Results are returned as an Excel file with coded responses and a theme list."
-      ),
+      p(class = "subtle", "Results are returned as an Excel file with coded responses and a theme list."),
       fileInput("theme_file", "Theme list", accept = c(".xlsx", ".xls")),
       tags$small(class = "subtle", "Leave empty to use the generated theme list."),
       div(class = "spacer"),
       actionButton("run", "Code responses", class = "btn-primary"),
       div(class = "spacer"),
       uiOutput("download_coded_ui")
+    ),
+    
+    # Disclaimer
+    
+    div(
+      class = "panel panel-info",
+      h5("About AI-assisted coding"),
+      p(
+        "This tool uses AI to assist with generating themes and coding open-ended survey responses. ",
+        "The resulting themes and codes are based on probabilistic interpretations of text and ",
+        "may differ from how a human researcher would code the same responses."
+      ),
+      p(
+        tags$strong("Best practice: "),
+        "Review generated themes before coding, validate results against your research objectives, ",
+        "and apply human judgment where nuance or ambiguity exists."
+      ),
+      p(
+        "This tool is designed to accelerate qualitative analysis, ",
+        tags$strong("not to replace expert review or methodological oversight.")
+      )
     )
   )
 )
