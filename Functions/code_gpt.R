@@ -38,7 +38,7 @@ code_gpt <- function(data, x, theme_list, id_var, n = NULL, batch_size = 100, mo
       "OpenAI API key is not set.\n\n",
       "Please generate one at https://platform.openai.com/ and set it using either of the following methods:\n\n",
       "1. Temporarily (for this session):\n\n",
-      "   Sys.setenv(OPENAI_API_KEY = 'your_api_key')\n\n",
+      "   Sys.setenv(OPENAI_API_KEY='your_api_key')\n\n",
       "2. Permanently:\n\n",
       "   Add the following line to your .Renviron file:\n",
       "   OPENAI_API_KEY='your_api_key'\n\n",
