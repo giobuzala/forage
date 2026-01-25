@@ -2,7 +2,7 @@
 
 library(shiny)
 library(shinyjs)
-library(tidyverse)
+library(dplyr)
 library(openxlsx)
 
 
@@ -385,7 +385,7 @@ ui <- fluidPage(
     div(
       class = "panel",
       h4(tags$span("Step 1.", class = "step-num"), "Upload survey data"),
-      tags$small(class = "subtle", "Upload an Excel file that includes an ID column and an open-ended response column."),
+      tags$small(class = "subtle", "Upload an Excel file that contains a respondent ID column and an open-ended response column."),
       fileInput("data_file", "Survey file", accept = c(".xlsx", ".xls")),
       uiOutput("column_selectors")
     ),
@@ -454,6 +454,8 @@ ui <- fluidPage(
         tags$strong("Giorgi Buzaladze"),
         " · ",
         tags$a(href = "https://giobuzala.com/", target = "_blank", "Website"),
+        " · ",
+        tags$a(href = "https://github.com/giobuzala", target = "_blank", "GitHub"),
         " · ",
         tags$a(href = "https://www.linkedin.com/in/giorgibuzaladze/", target = "_blank", "LinkedIn")
       )
