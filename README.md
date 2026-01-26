@@ -68,7 +68,7 @@ Sys.setenv(OPENAI_API_KEY="your_api_key")
 Or create a local `.Renviron` file in the project root:
 
 ```
-OPENAI_API_KEY = "your_api_key"
+OPENAI_API_KEY="your_api_key"
 ```
 
 3. Start the app:
