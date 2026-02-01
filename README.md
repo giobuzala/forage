@@ -79,4 +79,4 @@ shiny::runApp("app.R")
 
 ## License
 
-MIT
+This project is released under a **custom non-commercial license** authored by the project owner.
