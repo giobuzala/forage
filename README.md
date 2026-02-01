@@ -53,7 +53,7 @@ This tool is designed to accelerate qualitative analysis, not to replace expert 
 
 1. Install packages:
 
-```
+```r
 install.packages(c(
   "dotenv", "dplyr", "httr2", "openxlsx", "purrr", "readxl", "shiny", "shinyjs", "stringr"
 ))
@@ -61,19 +61,19 @@ install.packages(c(
 
 2. Set your OpenAI API key using one of the following methods:
 
-```
+```r
 Sys.setenv(OPENAI_API_KEY="your_api_key")
 ```
 
 Or create a local `.Renviron` file in the project root:
 
-```
+```r
 OPENAI_API_KEY="your_api_key"
 ```
 
 3. Start the app:
 
-```
+```r
 shiny::runApp("app.R")
 ```
 
