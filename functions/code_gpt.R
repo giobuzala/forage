@@ -69,6 +69,11 @@ code_gpt <- function(data, x, theme_list, id_var, n = NULL, batch_size = 100, mo
   q_label <- attr(data[[x]], "label", exact = TRUE)
   if (is.null(q_label)) q_label <- x
   
+  # Ensure Description column exists
+  if (!("Description" %in% names(theme_list))) {
+    theme_list <- dplyr::mutate(theme_list, Description = NA_character_)
+  }
+  
   # Build code list
   code_text <- paste0(
     "Available codes:\n",
@@ -117,7 +122,7 @@ code_gpt <- function(data, x, theme_list, id_var, n = NULL, batch_size = 100, mo
             list(
               role = "system",
               content = paste(
-                "You are a survey researcher coding open-ended responses based on the detailed code descriptions.",
+                "You are a survey researcher coding open-ended responses based on the provided code labels and descriptions.",
                 "Follow these rules strictly:",
                 "1. Do not skip any rows — each response must receive at least one code.",
                 "2. Only use numeric codes from the provided list; no text, symbols, or letters.",
@@ -183,6 +188,7 @@ code_gpt <- function(data, x, theme_list, id_var, n = NULL, batch_size = 100, mo
         codes <- stringr::str_extract_all(x, "\\d+")[[1]] # Extract all numeric codes
         codes <- suppressWarnings(as.numeric(codes)) # Convert to numeric, remove NAs
         codes <- codes[!is.na(codes)]
+        codes <- codes[codes %in% theme_list$Code] # Remove invalid codes
         codes <- unique(codes) # Deduplicate
         codes <- sort(codes) # Sort
         paste(codes, collapse = ", ")
