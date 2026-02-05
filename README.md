@@ -43,6 +43,14 @@ As a best practice, generated themes should be reviewed before coding, with resu
 
 This tool is designed to accelerate qualitative analysis, not to replace expert review or methodological oversight.
 
+## Data Security
+
+AI processing is performed only to generate requested outputs. OpenAI does not train its models on data submitted through the API.
+
+Data is handled in accordance with [OpenAI’s API data-usage policies](https://openai.com/policies/usage-policies/) and is not used for advertising, profiling, or model improvement.
+
+Users are responsible for ensuring that their use of AI tools complies with applicable data-handling, privacy, and confidentiality requirements.
+
 ## Files
 
 - `app.R` Shiny UI with two steps: generate themes, then code responses.
