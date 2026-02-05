@@ -434,7 +434,7 @@ ui <- fluidPage(
       class = "panel panel-info",
       h5("About AI-assisted coding"),
       p(
-        "This tool uses AI to assist with generating themes and coding open-ended survey responses. ",
+        "This tool uses the OpenAI API to assist with generating themes and coding open-ended survey responses. ",
         "The resulting themes and codes are based on probabilistic interpretations of text and ",
         "may differ from how a human researcher would code the same responses."
       ),
@@ -446,6 +446,18 @@ ui <- fluidPage(
       p(
         "This tool is designed to accelerate qualitative analysis, ",
         tags$strong("not to replace expert review or methodological oversight.")
+      ),
+      div(class = "spacer"),
+      h5("Data security"),
+      p(
+        "AI processing is performed only to generate requested outputs. ",
+        "OpenAI does not train its models on data submitted through the API. ",
+        "Data is handled in accordance with ",
+        tags$a(href = "https://openai.com/policies/usage-policies/", target = "_blank", "OpenAI’s API data-usage policies"),
+        " and is not used for advertising, profiling, or model improvement."
+      ),
+      p(
+        tags$strong("Users are responsible for ensuring that their use of AI tools complies with applicable data-handling, privacy, and confidentiality requirements.")
       )
     ),
     
