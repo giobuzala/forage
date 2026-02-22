@@ -453,12 +453,18 @@ ui <- fluidPage(
         "AI processing is performed only to generate requested outputs. ",
         "OpenAI does not train its models on data submitted through the API. ",
         "Data is handled in accordance with ",
-        tags$a(href = "https://openai.com/policies/usage-policies/", target = "_blank", "OpenAI’s API data-usage policies"),
+        tags$a(href = "https://openai.com/policies/usage-policies/", target = "_blank", "OpenAI's API data-usage policies"),
         " and is not used for advertising, profiling, or model improvement."
       ),
       p(
         tags$strong("Users are responsible for ensuring that their use of AI tools complies with applicable data-handling, privacy, and confidentiality requirements.")
-      )
+      ),
+      p(HTML(paste0(
+        "Learn more at ",
+        "<a href='https://openai.com/business-data/' target='_blank' rel='noopener noreferrer'>Business data</a>",
+        " and ",
+        "<a href='https://developers.openai.com/api/docs/guides/your-data' target='_blank' rel='noopener noreferrer'>Your data</a>."
+      )))
     ),
     
     # Credits
