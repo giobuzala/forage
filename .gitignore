@@ -8,10 +8,11 @@
 *.xlsm
 
 # Ignore RStudio files
+.Rproj.user/
 .Rhistory
 .RData
 .RDataTmp
-.Rproj.user/
+.positai
 
 # Ignore ZIP and large archives
 *.zip
