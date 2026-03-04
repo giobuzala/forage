@@ -53,7 +53,7 @@ Learn more at [Business data](https://openai.com/business-data/) and [Your data]
 - `Functions/theme_gpt.R` Generates a theme list from open-ended responses.
 - `Functions/code_gpt.R` Codes responses using a provided theme list.
 
-## To run locally
+## Local set up
 
 1. Install packages:
 
