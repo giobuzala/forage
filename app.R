@@ -65,10 +65,10 @@ ui <- fluidPage(
   tags$title("forage"),
     
   # favicon ----
-    
-  tags$link(rel = "icon", href = "favicon.ico"),
-  tags$link(rel = "shortcut icon", href = "favicon.ico"),
-    
+  
+  tags$link(rel = "icon", type = "image/png", sizes = "32x32", href = "favicon-32x32.png"),
+  tags$link(rel = "icon", type = "image/png", sizes = "16x16", href = "favicon-16x16.png"),
+  
   # CSS styling ----
     
   tags$style(HTML("
