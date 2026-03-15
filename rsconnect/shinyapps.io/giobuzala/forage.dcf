@@ -5,7 +5,7 @@ account: giobuzala
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 16505757
-bundleId: 11673833
+bundleId: 11674432
 url: https://giobuzala.shinyapps.io/forage/
 version: 1
 asMultiple: FALSE
