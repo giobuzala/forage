@@ -33,7 +33,7 @@
 theme_gpt <- function(data, x, n = NULL, sample = NULL, model = "gpt-4o", instructions = NULL) {
   # Check required packages ----
   
-  required_pkgs <- c("tibble", "dplyr", "readxl", "purrr", "stringr", "httr2")
+  required_pkgs <- c("dplyr", "tibble", "readxl", "purrr", "stringr", "httr2")
   missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, logical(1), quietly = TRUE)]
   if (length(missing_pkgs) > 0) {
     stop("These packages are required but not installed: ",
